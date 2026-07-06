@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: custera-hris
+    runtime: docker
+    plan: starter
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: custera-hris-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SEED_DEMO
+        value: "true"
+      - key: DEMO_ADMIN_EMAIL
+        value: admin@custera-hris.local
+      - key: DEMO_PASSWORD
+        value: "ChangeMe123!"
+
+databases:
+  - name: custera-hris-db
+    plan: basic
+    databaseName: custera_hris
+    user: custera

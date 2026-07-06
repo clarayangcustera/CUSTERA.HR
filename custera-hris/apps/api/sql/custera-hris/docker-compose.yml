@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: custera_hris
+      POSTGRES_USER: custera
+      POSTGRES_PASSWORD: custera
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U custera -d custera_hris"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      PORT: 8080
+      DATABASE_URL: postgresql://custera:custera@db:5432/custera_hris
+      CORS_ORIGIN: http://localhost:8080
+      JWT_SECRET: ${JWT_SECRET:-development-only-secret-change-me}
+      SEED_DEMO: ${SEED_DEMO:-true}
+      DEMO_ADMIN_EMAIL: ${DEMO_ADMIN_EMAIL:-admin@custera-hris.local}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-ChangeMe123!}
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

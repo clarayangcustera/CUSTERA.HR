@@ -1,0 +1,20 @@
+{
+  "name": "custera-hris",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Original full-stack HR information system starter with employee, leave, claims, attendance, payroll, documents and approvals.",
+  "workspaces": ["apps/api", "apps/web"],
+  "scripts": {
+    "dev": "concurrently -n API,WEB -c blue,green \"npm run dev -w @custera/api\" \"npm run dev -w @custera/web\"",
+    "build": "npm run build -w @custera/web",
+    "start": "npm run start -w @custera/api",
+    "check": "npm run check -w @custera/api && npm run build -w @custera/web",
+    "db:seed": "npm run seed -w @custera/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=20.18.0"
+  }
+}
